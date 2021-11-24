@@ -22,7 +22,7 @@ class Agent(Player):
     Define the agent class.
     """
 
-    def __init__(self, name: str, epsilon: float = 0.3, learning_rate: float = 0.2, decay_gamma: float = 0.9,
+    def __init__(self, name: str, epsilon: float = 0.1, learning_rate: float = 0.2, decay_gamma: float = 0.95,
                  board_rows: int = 3, board_cols: int = 3) -> None:
         """
         Initialize the agent.
@@ -54,7 +54,7 @@ class Agent(Player):
 
     def choose_action(self, available_positions, board, player_id) -> Tuple:
         """
-        Choose an action based on the current state.
+        Choose an action based on the current state. epsilon-greedy policy.
 
         :param available_positions: np.array. Available positions of the current board.
         :param board: np.array. The current game board
@@ -62,9 +62,10 @@ class Agent(Player):
         :return action: Tuple. The action in the form of (row, column)
         """
 
-        # choose a random action base on epsilon
+        # exploration
         if np.random.uniform(0, 1) <= self.epsilon:
             action = available_positions[np.random.choice(len(available_positions))]
+        # exploitation
         else:
             # choose the action with the highest value
             action = self._choose_action_with_value(available_positions, board, player_id)

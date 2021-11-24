@@ -107,10 +107,10 @@ class State:
         elif result == -1:
             self.p1.update_reward(0)
             self.p2.update_reward(1)
-        # draw
+        # draw, player 1 started first so player 1 gets less reward
         else:
             self.p1.update_reward(0.1)
-            self.p2.update_reward(0.1)
+            self.p2.update_reward(0.5)
 
     def reset_game(self) -> None:
         """
@@ -156,6 +156,7 @@ class State:
 
                 if winner is not None:
                     if not train:
+                        self.print_board()
                         if winner == 1:
                             print(f'Player {self.p1.name} wins!')
                         elif winner == -1:
