@@ -69,7 +69,6 @@ class Agent(Player):
             # choose the action with the highest value
             action = self._choose_action_with_value(available_positions, board, player_id)
 
-        print(f'Agent {self.name} chose action {tuple(action)}')
         return tuple(action)
 
     def _choose_action_with_value(self, available_positions, board, player_id) -> Tuple:

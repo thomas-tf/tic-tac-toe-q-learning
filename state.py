@@ -144,6 +144,9 @@ class State:
                 # update the state of the board
                 self.update_state(action)
 
+                if not train:
+                    print(f'Player {player.name} takes {action}.')
+
                 if train and isinstance(player, Agent):
                     board_hash = self.get_hash()
                     player.add_state(board_hash)
