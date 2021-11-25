@@ -44,7 +44,7 @@ To move a move, simply input the row number and the column number (0 for the fir
 ### Retrain the agents
 To retrain the agents, uncomment following line in the `main.py` file:
 ```python
-# init_training(50000, resume=False)
+# init_training(100000, resume=False)
 ```
 The above line will train 2 agents for 100,000 games where they play against each other.
 
