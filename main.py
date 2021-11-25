@@ -50,7 +50,7 @@ def play(start_first: bool, player_name: str = 'human', agent_name: str = 'AI') 
 if __name__ == "__main__":
 
     # uncomment this line to retrain policy
-    init_training(200000)
+    # init_training(200000)
 
     while True:
         start_player = input('Would you like to go first? [y/n]')
