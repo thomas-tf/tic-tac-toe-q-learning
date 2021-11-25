@@ -21,7 +21,7 @@ The parameters of the Q-learning algorithm are:
 - the discount factor gamma (default: 0.9)
 - the epsilon-greedy policy (default: 0.3)
 
-They can be set in the agent class or when the agent is being initalized. But the default values are highly recommended as they were the best settings after doing several experiments.
+They can be set in the agent class or when the agent is being initalized. But the default values are highly recommended as they were the best settings came up after doing several experiments.
 
 ### Prerequisites
 Python 3.7 was used for this project but any later version should work.
