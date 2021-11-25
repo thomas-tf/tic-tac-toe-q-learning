@@ -46,6 +46,6 @@ To retrain the agents, uncomment following line in the `main.py` file:
 ```python
 # init_training(50000, resume=False)
 ```
-The above code will train 2 agents for 50,000 games where they play against each other.
+The above line will train 2 agents for 50,000 games where they play against each other.
 
 50,000 seems to be enough to get the agents to converge and they are unbeatable.
