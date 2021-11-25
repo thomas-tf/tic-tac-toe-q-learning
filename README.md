@@ -44,8 +44,8 @@ To move a move, simply input the row number and the column number (0 for the fir
 ### Retrain the agents
 To retrain the agents, uncomment following line in the `main.py` file:
 ```python
-# init_training(200000)
+# init_training(50000, resume=False)
 ```
-The above code will train 2 agents for 200,000 games where they play against each other.
+The above code will train 2 agents for 50,000 games where they play against each other.
 
-200,000 seems to be enough to get the agents to converge and they are unbeatable (at least for me).
+50,000 seems to be enough to get the agents to converge and they are unbeatable.
