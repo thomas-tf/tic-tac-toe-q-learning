@@ -13,7 +13,7 @@ class HumanPlayer(Player):
         """
         Ask the user to choose an action.
 
-        :param available_positions: List. list of possible positions
+        :param available_positions: np.array. An array of possible positions
         :param board: np.array. The board where the action will be performed
         :param player_id: int. The id of the player
         :return action: Tuple. The action chosen by the user in the form of (row, column)
@@ -41,8 +41,8 @@ class HumanPlayer(Player):
                 print("Row index is out of bounds, please retry.")
                 continue
 
-            action = (row, col)
-            if action in available_positions:
-                return action
+            action = [row, col]
+            if action in available_positions.tolist():
+                return tuple(action)
             else:
-                print(f"Invalid action. Position {action} is already taken.")
+                print(f"Invalid action. Position {tuple(action)} is already taken.")
