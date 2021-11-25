@@ -5,7 +5,6 @@ import numpy as np
 from collections import defaultdict
 from typing import Tuple
 from player import Player
-from state import State
 
 POLICY_DIR = './policy/'
 
@@ -22,7 +21,7 @@ class Agent(Player):
     Define the agent class.
     """
 
-    def __init__(self, name: str, epsilon: float = 0.1, learning_rate: float = 0.2, decay_gamma: float = 0.95,
+    def __init__(self, name: str, epsilon: float = 0.3, learning_rate: float = 0.5, decay_gamma: float = 0.95,
                  board_rows: int = 3, board_cols: int = 3) -> None:
         """
         Initialize the agent.
@@ -43,6 +42,13 @@ class Agent(Player):
         self.epsilon = epsilon
         self.decay_gamma = decay_gamma
         self.states_value = defaultdict(dd)
+
+    @staticmethod
+    def get_hash(board):
+        """
+        Get the string representation of the board to be used as the key of the states values.
+        """
+        return str(board.flatten())
 
     def add_state(self, state) -> None:
         """
@@ -83,7 +89,7 @@ class Agent(Player):
             position = tuple(position)
             next_board = board.copy()
             next_board[position] = player_id
-            next_board_hash = State.get_hash(next_board)
+            next_board_hash = self.get_hash(next_board)
             value = self.states_value.get(next_board_hash, 0)
 
             if value >= value_max:

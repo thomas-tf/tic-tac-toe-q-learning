@@ -42,29 +42,29 @@ class State:
         """
         # check if row is all same
         for row in self.board:
-            if np.sum(row) == 3:
+            if np.sum(row) == self.board_rows:
                 self.isEnd = True
                 return 1
-            if np.sum(row) == -3:
+            if np.sum(row) == -self.board_rows:
                 self.isEnd = True
                 return -1
 
         # check if column is all same
         for col in self.board.T:
-            if np.sum(col) == 3:
+            if np.sum(col) == self.board_cols:
                 self.isEnd = True
                 return 1
-            if np.sum(col) == 3:
+            if np.sum(col) == -self.board_cols:
                 self.isEnd = True
                 return -1
 
         # diagonals
         diag1_sum = np.sum(np.diagonal(self.board))  # top left to bottom right
         diag2_sum = np.sum(np.diagonal(np.rot90(self.board)))  # top right to bottom left
-        if diag1_sum == 3 or diag2_sum == 3:
+        if diag1_sum == max(self.board_cols, self.board_rows) or diag2_sum == max(self.board_cols, self.board_rows):
             self.isEnd = True
             return 1
-        if diag1_sum == -3 or diag2_sum == -3:
+        if diag1_sum == -max(self.board_cols, self.board_rows) or diag2_sum == -max(self.board_cols, self.board_rows):
             self.isEnd = True
             return -1
 
