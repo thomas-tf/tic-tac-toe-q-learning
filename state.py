@@ -28,8 +28,12 @@ class State:
         self.board_hash = None
         self.player_id = 1
 
-    def get_hash(self):
-        return str(self.board.flatten())
+    @staticmethod
+    def get_hash(board):
+        """
+        Get the string representation of the board to be used as the key of the states values.
+        """
+        return str(board.flatten())
 
     def is_end_state(self) -> Optional[int]:
         """
@@ -93,7 +97,7 @@ class State:
         # pass the next turn to the other player
         self.player_id = self.player_id * -1
 
-    def give_reward(self, verbose=False) -> None:
+    def give_reward(self) -> None:
         """
         Give the reward to the player depending on the game end state
         """
@@ -148,7 +152,7 @@ class State:
                     print(f'Player {player.name} takes {action}.')
 
                 if train and isinstance(player, Agent):
-                    board_hash = self.get_hash()
+                    board_hash = self.get_hash(self.board)
                     player.add_state(board_hash)
 
                 # check board status if it is end
@@ -165,9 +169,10 @@ class State:
                             print(f'The game ends with a draw!')
 
                     # update reward and proceed to next game
-                    self.give_reward()
-                    self.p1.reset()
-                    self.p2.reset()
+                    if train:
+                        self.give_reward()
+                        self.p1.reset()
+                        self.p2.reset()
                     self.reset_game()
                     break
 

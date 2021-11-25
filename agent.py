@@ -5,7 +5,7 @@ import numpy as np
 from collections import defaultdict
 from typing import Tuple
 from player import Player
-
+from state import State
 
 POLICY_DIR = './policy/'
 
@@ -77,19 +77,20 @@ class Agent(Player):
         Choose an action based on the current state. Select the best action base on the utility.
         """
         value_max = 0
-        action = available_positions[0]
+        action = tuple(available_positions[0])
 
-        for p in available_positions:
+        for position in available_positions:
+            position = tuple(position)
             next_board = board.copy()
-            next_board[p] = player_id
-            next_board_hash = self.get_hash(next_board)
+            next_board[position] = player_id
+            next_board_hash = State.get_hash(next_board)
             value = self.states_value.get(next_board_hash, 0)
 
             if value >= value_max:
                 value_max = value
-                action = p
+                action = position
 
-        return tuple(action)
+        return action
 
     def update_reward(self, reward) -> None:
         """
@@ -131,7 +132,3 @@ class Agent(Player):
             self.states_value = pickle.load(f)
 
         print(f'Loaded policy of {self.name} from {load_path}.')
-
-    @staticmethod
-    def get_hash(board):
-        return str(board.flatten())
