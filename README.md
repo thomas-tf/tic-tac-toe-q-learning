@@ -13,7 +13,7 @@ The update rule of Q-Learning is given by:
 Where ![formula](https://render.githubusercontent.com/render/math?math=Q(s,a)) is the Q-value of the state-action pair, 
 ![formula](https://render.githubusercontent.com/render/math?math=r(s,a)) is the reward of the state-action pair, 
 ![formula](https://render.githubusercontent.com/render/math?math=\alpha) is the learning rate, 
-![formula](https://render.githubusercontent.com/render/math?math=\gamma) gamma is the discount factor, and  
+![formula](https://render.githubusercontent.com/render/math?math=\gamma) gamma is the discount factor, and 
 ![formula](https://render.githubusercontent.com/render/math?math=\underset{{a}'}{max}%20Q({s}',{a}')) is the maximum Q-value of the next state.
 
 The parameters of the Q-learning algorithm are:
