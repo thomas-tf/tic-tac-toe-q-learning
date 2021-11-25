@@ -14,5 +14,11 @@ class Player:
     def update_reward(self, reward):
         pass
 
+    def add_evaluation_stats(self, reward):
+        pass
+
+    def plot_statistics(self, games):
+        pass
+
     def reset(self):
         pass

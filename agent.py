@@ -1,6 +1,7 @@
 import pickle
 import os
 import numpy as np
+import matplotlib.pyplot as plt
 
 from collections import defaultdict
 from typing import Tuple
@@ -21,7 +22,7 @@ class Agent(Player):
     Define the agent class.
     """
 
-    def __init__(self, name: str, epsilon: float = 0.3, learning_rate: float = 0.5, decay_gamma: float = 0.95,
+    def __init__(self, name: str, epsilon: float = 0.3, learning_rate: float = 0.2, decay_gamma: float = 0.9,
                  board_rows: int = 3, board_cols: int = 3) -> None:
         """
         Initialize the agent.
@@ -41,6 +42,15 @@ class Agent(Player):
         self.learning_rate = learning_rate
         self.epsilon = epsilon
         self.decay_gamma = decay_gamma
+        self.num_loses = 0
+        self.num_wins = 0
+        self.num_draws = 0
+        self.running_loses = []
+        self.running_wins = []
+        self.running_draws = []
+        self.running_win_rate = []
+        self.running_draw_rate = []
+        self.running_lose_rate = []
         self.states_value = defaultdict(dd)
 
     @staticmethod
@@ -108,6 +118,48 @@ class Agent(Player):
         for state in reversed(self.states):
             self.states_value[state] += self.learning_rate * (reward * self.decay_gamma - self.states_value[state])
             reward = self.states_value[state]
+
+    def add_evaluation_stats(self, reward) -> None:
+        """
+
+        :param reward:
+        :return:
+        """
+        if reward == 1:
+            self.num_wins += 1
+        elif reward == 0:
+            self.num_loses += 1
+        else:
+            self.num_draws += 1
+
+        self.running_wins.append(self.num_wins)
+        self.running_loses.append(self.num_loses)
+        self.running_draws.append(self.num_draws)
+        self.running_win_rate.append(self.num_wins / (self.num_wins + self.num_loses + self.num_draws))
+        self.running_draw_rate.append(self.num_draws / (self.num_wins + self.num_loses + self.num_draws))
+        self.running_lose_rate.append(self.num_loses / (self.num_wins + self.num_loses + self.num_draws))
+
+    def plot_statistics(self, games) -> None:
+        """
+        Plot the statistics of the agent.
+        """
+        num_games = len(self.running_win_rate)
+        x = np.arange(num_games)
+        fig, axs = plt.subplots(2, sharex=True)
+        axs[0].plot(x, self.running_wins, label='Wins', color='blue')
+        axs[0].plot(x, self.running_loses, label='Loses', color='red')
+        axs[0].plot(x, self.running_draws, label='Draws', color='green')
+        axs[0].legend()
+        axs[0].set_ylabel('Number of wins, losses and draws')
+
+        axs[1].plot(x, self.running_win_rate, label='Win rate', color='blue')
+        axs[1].plot(x, self.running_draw_rate, label='Draw rate', color='green')
+        axs[1].plot(x, self.running_lose_rate, label='Lose rate', color='red')
+        axs[1].legend()
+        axs[1].set_ylabel('Win rate')
+
+        fig.suptitle(f'Evaluation at {games} games for agent {self.name}')
+        plt.show()
 
     def reset(self) -> None:
         """

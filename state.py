@@ -113,7 +113,7 @@ class State:
             self.p2.update_reward(1)
         # draw, player 1 started first so player 1 gets less reward
         else:
-            self.p1.update_reward(0.1)
+            self.p1.update_reward(0.5)
             self.p2.update_reward(0.5)
 
     def reset_game(self) -> None:
@@ -125,18 +125,22 @@ class State:
         self.isEnd = False
         self.player_id = 1
 
-    def play(self, train=False, games=1) -> None:
+    def play(self, train=False, eval=False, games=1, eval_every=10000, eval_games=100) -> None:
         """
         start the game
 
         :param train: bool. if True, train the agent
+        :param eval: bool. if True, evaluate the agent
         :param games: int. Number of rounds to train
+        :param eval_every: int. Number of games to train before evaluating the agent
+        :param eval_games: int. Number of games for evaluatiojn
         """
-        for _ in tqdm(range(games), disable=not train):
+        for i in tqdm(range(games), desc='training' if train else ('evaluating' if eval else None),
+                      disable=(not train and not eval)):
 
             while not self.isEnd:
 
-                if not train:
+                if not train and not eval:
                     self.print_board()
 
                 # get current player
@@ -148,7 +152,7 @@ class State:
                 # update the state of the board
                 self.update_state(action)
 
-                if not train:
+                if not train and not eval:
                     print(f'Player {player.name} takes {action}.')
 
                 if train and isinstance(player, Agent):
@@ -160,19 +164,48 @@ class State:
 
                 if winner is not None:
                     if not train:
-                        self.print_board()
+                        if not eval:
+                            self.print_board()
                         if winner == 1:
-                            print(f'Player {self.p1.name} wins!')
+                            if eval:
+                                self.p1.add_evaluation_stats(1)
+                                self.p2.add_evaluation_stats(0)
+                            else:
+                                print(f'Player {self.p1.name} wins!')
                         elif winner == -1:
-                            print(f'Player {self.p2.name} wins!')
+                            if eval:
+                                self.p1.add_evaluation_stats(0)
+                                self.p2.add_evaluation_stats(1)
+                            else:
+                                print(f'Player {self.p2.name} wins!')
                         else:
-                            print(f'The game ends with a draw!')
+                            if eval:
+                                self.p1.add_evaluation_stats(0.5)
+                                self.p2.add_evaluation_stats(0.5)
+                            else:
+                                print(f'The game ends with a draw!')
 
                     # update reward and proceed to next game
                     if train:
                         self.give_reward()
-                        self.p1.reset()
-                        self.p2.reset()
+
+                        if i % eval_every == eval_every - 1:
+
+                            # create another pair of agents that always choose the best action
+                            eval_agent1 = Agent('eval_agent1', epsilon=0)
+                            eval_agent2 = Agent('eval_agent2', epsilon=0)
+                            # load current states values
+                            eval_agent1.states_value = self.p1.states_value
+                            eval_agent2.states_value = self.p2.states_value
+
+                            eval_state = self.__class__(eval_agent1, eval_agent2)
+                            eval_state.play(train=False, eval=True, games=eval_games)
+                            eval_agent1.plot_statistics(i + 1)
+                            eval_agent2.plot_statistics(i + 1)
+
+                    self.p1.reset()
+                    self.p2.reset()
+
                     self.reset_game()
                     break
 

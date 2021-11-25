@@ -3,7 +3,7 @@ from agent import Agent
 from humanplayer import HumanPlayer
 
 
-def init_training(games: int = 50000) -> None:
+def init_training(games: int = 50000, resume: bool = False) -> None:
     """
     Initialize the training of two agents.
 
@@ -12,6 +12,10 @@ def init_training(games: int = 50000) -> None:
 
     agent1 = Agent("Agent1")
     agent2 = Agent("Agent2")
+
+    if resume:
+        agent1.load_policy('Agent1_policy')
+        agent2.load_policy('Agent2_policy')
 
     state = State(agent1, agent2)
 
@@ -50,7 +54,7 @@ def play(start_first: bool, player_name: str = 'human', agent_name: str = 'AI') 
 if __name__ == "__main__":
 
     # uncomment this line to retrain policy
-    # init_training(200000)
+    # init_training(50000, resume=False)
 
     while True:
         start_player = input('Would you like to go first? [y/n]')
